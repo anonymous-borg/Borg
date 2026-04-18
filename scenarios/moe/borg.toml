@@ -1,0 +1,50 @@
+[system]
+kind = "moe_ep_multi_instance"
+
+[system.router]
+kind = "moe_load_balancing"
+
+[system.model_runner]
+kind = "moe_ep"
+ep = 2
+link_bw = 60397977600.0
+link_latency = 0.0
+
+[system.model_runner.compute_sim]
+kind = "table_lookup"
+perf_dir = "../../data/qwen3_30b_a3b.csv"
+
+[system.model_runner.network_sim]
+kind = "flow"
+
+[[system.schedulers]]
+kind = "chunked_prefill"
+block_size = 16
+max_batch = 32
+max_num_batched_tokens = 2048
+device_mem = 42949672960
+device_mem_utilization = 0.9
+enable_prefix_caching = true
+
+[[system.schedulers]]
+kind = "chunked_prefill"
+block_size = 16
+max_batch = 32
+max_num_batched_tokens = 2048
+device_mem = 42949672960
+device_mem_utilization = 0.9
+enable_prefix_caching = false
+
+[system.model]
+kind = "qwen3_moe"
+hidden_size = 2048
+intermediate_size = 6144
+moe_intermediate_size = 768
+num_attention_heads = 32
+num_hidden_layers = 48
+num_key_value_heads = 4
+num_experts = 128
+num_experts_per_tok = 8
+decoder_sparse_step = 1
+mlp_only_layers = []
+vocab_size = 151936

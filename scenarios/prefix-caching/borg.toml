@@ -1,0 +1,34 @@
+[system]
+kind = "single_instance"
+
+[system.model_runner]
+kind = "ring"
+tp = 1
+link_bw = 60397977600.0
+link_latency = 0.0
+
+[system.model_runner.compute_sim]
+kind = "table_lookup"
+perf_dir = "../../data/llama3_1_8b.csv"
+
+[system.model_runner.network_sim]
+kind = "flow"
+
+[system.scheduler]
+kind = "chunked_prefill"
+block_size = 16
+max_batch = 1
+max_num_batched_tokens = 512
+device_mem = 42949672960
+device_mem_utilization = 0.9
+enable_prefix_caching = true
+
+[system.model]
+kind = "llama3_1"
+hidden_size = 4096
+intermediate_size = 14336
+max_position_embeddings = 131072
+num_attention_heads = 32
+num_hidden_layers = 32
+num_key_value_heads = 8
+vocab_size = 128256

@@ -1,0 +1,11 @@
+# build
+/target
+
+# output
+/output/
+
+# cache
+__pycache__
+
+# data
+/data/**/*csv

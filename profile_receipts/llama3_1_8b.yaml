@@ -1,0 +1,56 @@
+vllm_config:
+  model: "meta-llama/Llama-3.1-8B"
+  tensor_parallel_size: 1
+  dtype: half
+  load_format: "dummy"
+  block_size: 16
+  max_num_batched_tokens: 2048
+  max_num_seqs: 256
+  gpu_memory_utilization: 0.9
+  enforce_eager: true
+  skip_tokenizer_init: true
+  enable_prefix_caching: false
+  generation_config: "vllm"
+  hf_overrides:
+    num_hidden_layers: 1
+profile_tp: [1, 2]
+tp_modifications:
+  - intermediate_size
+  - num_attention_heads
+  - num_key_value_heads
+  - vocab_size
+layers:
+  LlamaForCausalLM:
+    VocabParallelEmbedding: embedding
+    LlamaDecoderLayer:
+      RMSNorm: layernorm
+      LlamaAttention:
+        QKVParallelLinear: qkv_projection
+        Llama3RotaryEmbedding: rope
+        Attention: attention
+        RowParallelLinear: o_projection
+      LlamaMLP:
+        MergedColumnParallelLinear: ffn1
+        SiluAndMul: act
+        RowParallelLinear: ffn2
+    RMSNorm: final_layernorm
+  LogitsProcessor: lm_head
+  Sampler: sampler
+layer_modes:
+  general:
+    - embedding
+    - qkv_projection
+    - rope
+    - o_projection
+    - ffn1
+    - act
+    - ffn2
+  tp_agnostic:
+    - layernorm
+    - final_layernorm
+  lm_head:
+    - lm_head
+  sampler:
+    - sampler
+  attention:
+    - attention

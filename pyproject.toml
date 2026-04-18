@@ -1,0 +1,41 @@
+[project]
+name = "borg"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+
+[dependency-groups]
+dev = [
+  "ruff>=0.15.8",
+]
+baseline = [
+  "aiohttp",
+  "joblib",
+  "msgspec",
+  "pandas",
+  "protobuf",
+  "pydantic",
+  "pyinstrument",
+  "scikit-learn",
+  "transformers",
+]
+general = [
+  "pyyaml",
+  "typer",
+]
+real = [
+  "deepmerge",
+  "matplotlib",
+  "vllm==0.16.*",
+]
+
+[build-system]
+requires = ["uv_build>=0.10.9,<0.11.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+default-groups = ["general", "baseline", "real", "dev"]
+
+[tool.uv.build-backend]
+module-root = "python"
